@@ -60,13 +60,13 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel2.setRequestFocusEnabled(false);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel2.setForeground(new java.awt.Color(44, 166, 236));
         jLabel2.setText("CATEGORIES");
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/code/project icons/CATEG.png"))); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel4.setForeground(new java.awt.Color(44, 166, 236));
         jLabel4.setText("NO.");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -103,13 +103,13 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel4.setRequestFocusEnabled(false);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel8.setForeground(new java.awt.Color(44, 166, 236));
         jLabel8.setText("GOODS");
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/code/project icons/MYPROD.png"))); // NOI18N
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel10.setForeground(new java.awt.Color(44, 166, 236));
         jLabel10.setText("NO.");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -147,13 +147,13 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel5.setRequestFocusEnabled(false);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel11.setForeground(new java.awt.Color(44, 166, 236));
         jLabel11.setText("VENDORS");
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/code/project icons/USER60.png"))); // NOI18N
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel13.setForeground(new java.awt.Color(44, 166, 236));
         jLabel13.setText("NO.");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
