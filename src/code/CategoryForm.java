@@ -3,7 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package code;
-
+import java.sql.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 /**
  *
  * @author ernes
@@ -15,7 +32,11 @@ public class CategoryForm extends javax.swing.JFrame {
      */
     public CategoryForm() {
         initComponents();
+        table_update();
     }
+    
+    Connection con1;
+    PreparedStatement pst;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,7 +76,7 @@ public class CategoryForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
+        jPanel1.setBackground(new java.awt.Color(44, 166, 236));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -74,15 +95,20 @@ public class CategoryForm extends javax.swing.JFrame {
         jLabel9.setText("ID");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 51, 102));
+        jButton2.setForeground(new java.awt.Color(44, 166, 236));
         jButton2.setText("UPDATE");
 
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 51, 102));
+        jButton4.setForeground(new java.awt.Color(44, 166, 236));
         jButton4.setText("ADD");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 51, 102));
+        jButton5.setForeground(new java.awt.Color(44, 166, 236));
         jButton5.setText("DELETE");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -171,19 +197,19 @@ public class CategoryForm extends javax.swing.JFrame {
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel1.setForeground(new java.awt.Color(44, 166, 236));
         jLabel1.setText("GOODS");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel2.setForeground(new java.awt.Color(44, 166, 236));
         jLabel2.setText("VENDORS");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel5.setForeground(new java.awt.Color(44, 166, 236));
         jLabel5.setText("ISSUE GOODS");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel4.setForeground(new java.awt.Color(44, 166, 236));
         jLabel4.setText("HOME");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -197,9 +223,9 @@ public class CategoryForm extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,14 +241,88 @@ public class CategoryForm extends javax.swing.JFrame {
                         .addGap(43, 43, 43)
                         .addComponent(jLabel2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addContainerGap()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(178, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+//insert record
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        //storing user inputs in a variable
+        String id = catId.getText() ;
+        String categoryName = catName.getText();
+        String desc = catDescription.getText();
+        
+        //converting id to integer
+        int convId = Integer.parseInt(id);
+        try{
+            //open connection
+             Class.forName("com.mysql.jdbc.Driver");
+             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/ShopApp","root","");
+             Statement sqlStatement = con.createStatement();
+             
+             String query  = "INSERT INTO category(ID,NAME,DESCRIPTION) VALUES("+id+",'"+categoryName+"','"+desc+"')";
+             //clear control
+             Clear();
+             
+             //execute query
+              sqlStatement.executeUpdate(query);
+              JOptionPane.showMessageDialog(this, "Category Record Saved Successfully!");
+              //close connection 
+              con.close();
+        }catch(Exception ex){
+             JOptionPane.showMessageDialog(this,ex);
+        }
+        //update the datatable
+             table_update();
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
+   
+    //function to clear
+    public void Clear(){
+        catId.setText("");
+        catName.setText("");
+        catDescription.setText("");
+    }
+    
+    public void table_update(){
+        int c;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con1 = DriverManager.getConnection("jdbc:mysql://localhost/ShopApp","root","");
+            pst = con1.prepareStatement("select * from category");
+            ResultSet rs = pst.executeQuery();
+            
+            ResultSetMetaData rsd = rs.getMetaData();
+            c = rsd.getColumnCount();
+            
+            //DefaultTableModel d = (DefaultTableModel)Table_name
+            DefaultTableModel d = (DefaultTableModel)jTable1.getModel();
+            d.setRowCount(0);
+            
+            while(rs.next()){
+            Vector v2 = new Vector();
+            
+            for(int i =1;i<=c;i++){
+                v2.add(rs.getString("ID"));
+                v2.add(rs.getString("NAME"));
+                v2.add(rs.getString("DESCRIPTION"));
+            }
+            d.addRow(v2);
+            }
+            
+            
+        } catch (ClassNotFoundException ex) {
+           // Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (SQLException ex) {
+            //Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -257,6 +357,10 @@ public class CategoryForm extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
